@@ -57,17 +57,6 @@ def sha256_checksum(file_path):
     return file_hash.hexdigest()
 
 
-def create_missing_subfolders(path: str):
-    folderpath = os.path.dirname(path)
-    path_subcomponents = folderpath.split(os.path.sep)
-    current_path = path_subcomponents[0]
-    
-    for subfolder in path_subcomponents[1:]:
-        current_path = os.path.join(current_path, subfolder)
-        if not os.path.exists(current_path):
-            os.mkdir(current_path)
-
-
 def sync_folders_and_log(source_folder_path: str, replica_folder_path: str, log_file_path: str):
     
     source_directories = scan_folder_structure(source_folder_path)[1]
@@ -84,7 +73,7 @@ def sync_folders_and_log(source_folder_path: str, replica_folder_path: str, log_
         if directory not in replica_directories:
             subdirectory_to_create = os.path.join(replica_folder_path, directory)
             if not os.path.isdir(subdirectory_to_create):
-                create_missing_subfolders(subdirectory_to_create)
+                os.makedirs(subdirectory_to_create)
                 log(f"Folder {subdirectory_to_create} was created", log_file_path)
           
     source_items = scan_folder_structure(source_folder_path)[0]
